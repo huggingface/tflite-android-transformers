@@ -16,7 +16,7 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="org.tensorflow.lite.examples.bertqa">
+    package="co.huggingface.android_transformers.bertqa">
 
   <application
       android:allowBackup="true"
@@ -32,7 +32,7 @@
         android:exported="false">
       <meta-data
           android:name="android.support.PARENT_ACTIVITY"
-          android:value="org.tensorflow.lite.examples.bertqa.ui.DatasetListActivity" />
+          android:value="co.huggingface.android_transformers.bertqa.ui.DatasetListActivity" />
     </activity>
 
     <activity

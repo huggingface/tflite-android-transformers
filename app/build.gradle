@@ -4,7 +4,7 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.0"
     defaultConfig {
-        applicationId "org.tensorflow.lite.examples.bertapp"
+        applicationId "co.huggingface.android_transformers"
         minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
@@ -37,7 +37,7 @@ android {
 }
 
 // Download TF Lite model.
-apply from: 'download.gradle'
+//apply from: 'download.gradle'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -51,7 +51,9 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'com.google.guava:guava:28.1-android'
-    implementation 'org.tensorflow:tensorflow-lite:2.0.0'
+//    implementation 'org.tensorflow:tensorflow-lite:2.0.0'
+//    implementation 'org.tensorflow:tensorflow-lite-select-tf-ops:0.0.0-nightly'
+    compile(name:'tensorflow-lite-with-select-tf-ops-0.0.0-nightly', ext:'aar')
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'androidx.test:core:1.2.0'
@@ -59,4 +61,10 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.3.1'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
 }

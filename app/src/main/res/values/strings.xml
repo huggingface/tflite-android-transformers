@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name" translatable="false">TFL Question and Answer</string>
+  <string name="app_name" translatable="false">Android Transformers</string>
   <string name="banner_description" translatable="false">Banner</string>
   <string name="title_dataset_hint_text" translatable="false">Please select an article below.</string>
   <string name="title_dataset_list" translatable="false">Datasets</string>
