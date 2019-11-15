@@ -2,7 +2,8 @@
 
 Convert Transformers models
 imported from the [🤗 Transformers](https://github.com/huggingface/transformers) library
-and use them on Android.
+and use them on Android. You can also check out our [swift-coreml-transformers](https://github.com/huggingface/swift-coreml-transformers)
+repo if you're looking for Transformers on iOS.
 
 ## DistilBERT for Question Answering
 
