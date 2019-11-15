@@ -37,7 +37,7 @@ android {
 }
 
 // Download TF Lite model.
-//apply from: 'download.gradle'
+apply from: 'download.gradle'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
