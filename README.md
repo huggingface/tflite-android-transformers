@@ -2,12 +2,15 @@
 
 Convert Transformers models
 imported from the [🤗 Transformers](https://github.com/huggingface/transformers) library
-and use them on Android. You can also check out our [swift-coreml-transformers](https://github.com/huggingface/swift-coreml-transformers)
-repo if you're looking for Transformers on iOS.
+and use them on Android. You can also check out our
+[swift-coreml-transformers](https://github.com/huggingface/swift-coreml-transformers) repo
+if you're looking for Transformers on iOS.
 
 ## DistilBERT for Question Answering
 
-The app contains a demo of the [DistilBERT](https://arxiv.org/abs/1910.01108) model (97% of BERT’s performance on GLUE) fine-tuned for Question answering on the SQuAD dataset. It provides 48 passages from the dataset for users to choose from.
+The app contains a demo of the [DistilBERT](https://arxiv.org/abs/1910.01108) model
+(97% of BERT’s performance on GLUE) fine-tuned for Question answering on the SQuAD dataset.
+It provides 48 passages from the dataset for users to choose from.
 
 ![demo gif](media/distilbert_qa.gif "Demo running offline on a Samsung Galaxy S8, speed 1.5x")
 
