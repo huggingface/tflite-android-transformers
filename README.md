@@ -10,7 +10,7 @@ The app contains a demo of the [DistilBERT](https://arxiv.org/abs/1910.01108) mo
 for Question answering on the SQuAD dataset. It provides 48 passages
 from the dataset for users to choose from.
 
-## Coming soon: GPT-2, quantization... and much more!
+### Coming soon: GPT-2, quantization... and much more!
 
 ---
 
