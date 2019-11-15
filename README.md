@@ -10,6 +10,8 @@ The app contains a demo of the [DistilBERT](https://arxiv.org/abs/1910.01108) mo
 for Question answering on the SQuAD dataset. It provides 48 passages
 from the dataset for users to choose from.
 
+![demo gif](media/distilbert_qa.gif "Demo running offline on a Samsung Galaxy S8, speed 1.5x")
+
 ### Coming soon: GPT-2, quantization... and much more!
 
 ---
