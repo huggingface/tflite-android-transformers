@@ -1,8 +1,8 @@
 # TensorFlow Lite Transformers w/ Android demo
 
-A repository of experiments using TensorFlow Lite to convert Transformers models
+Convert Transformers models
 imported from the [🤗 Transformers](https://github.com/huggingface/transformers) library
-and use them on Android. Stay tuned!
+and use them on Android.
 
 ## DistilBERT for Question Answering
 
