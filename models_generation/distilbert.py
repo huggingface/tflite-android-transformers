@@ -10,7 +10,7 @@ print(model.inputs)
 print(model.outputs)
 
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
-converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS, tf.lite.OpsSet.SELECT_TF_OPS]
+converter.target_spec.supported_ops = [tf.lite.OpsSet.SELECT_TF_OPS]
 
 tflite_model = converter.convert()
 
