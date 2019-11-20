@@ -21,7 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.design.chip.Chip;
-import co.huggingface.android_transformers.bertqa.R;
+import co.huggingface.android_transformers.R;
 
 /** Adapter class to show question suggestion chips. */
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.MyViewHolder> {

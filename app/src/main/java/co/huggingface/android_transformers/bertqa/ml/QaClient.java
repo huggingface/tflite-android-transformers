@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import org.tensorflow.lite.Interpreter;
 
+import co.huggingface.android_transformers.gpt2.tokenization.GPT2Tokenizer;
+
 /** Interface to load TfLite model and provide predictions. */
 public class QaClient {
   private static final String TAG = "BertDemo";
@@ -61,6 +63,7 @@ public class QaClient {
   public QaClient(Context context) {
     this.context = context;
     this.featureConverter = new FeatureConverter(dic, DO_LOWER_CASE, MAX_QUERY_LEN, MAX_SEQ_LEN);
+    GPT2Tokenizer t = new GPT2Tokenizer(context);
   }
 
   @WorkerThread
