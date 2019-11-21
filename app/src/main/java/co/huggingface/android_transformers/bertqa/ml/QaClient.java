@@ -17,7 +17,7 @@ package co.huggingface.android_transformers.bertqa.ml;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.WorkerThread;
 import android.util.Log;
 import com.google.common.base.Joiner;
 import java.io.BufferedReader;
@@ -34,8 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.tensorflow.lite.Interpreter;
-
-import co.huggingface.android_transformers.gpt2.tokenization.GPT2Tokenizer;
 
 /** Interface to load TfLite model and provide predictions. */
 public class QaClient {
@@ -63,7 +61,6 @@ public class QaClient {
   public QaClient(Context context) {
     this.context = context;
     this.featureConverter = new FeatureConverter(dic, DO_LOWER_CASE, MAX_QUERY_LEN, MAX_SEQ_LEN);
-    GPT2Tokenizer t = new GPT2Tokenizer(context);
   }
 
   @WorkerThread

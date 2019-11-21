@@ -20,9 +20,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.speech.tts.TextToSpeech;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -35,8 +35,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputEditText;
 import java.util.List;
 import java.util.Locale;
 import co.huggingface.android_transformers.R;
@@ -210,7 +210,7 @@ public class QaActivity extends AppCompatActivity {
     questionAnswered = false;
 
     Snackbar runningSnackbar =
-        Snackbar.make(contentTextView, "Looking up answer...", Integer.MAX_VALUE);
+        Snackbar.make(contentTextView, "Looking up answer...", Snackbar.LENGTH_INDEFINITE);
     runningSnackbar.show();
 
     // Run TF Lite model to get the answer.
