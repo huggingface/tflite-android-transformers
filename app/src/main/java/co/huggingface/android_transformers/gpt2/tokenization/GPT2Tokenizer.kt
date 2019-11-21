@@ -1,50 +1,10 @@
 package co.huggingface.android_transformers.gpt2.tokenization
 
-import android.content.Context
-import android.util.JsonReader
-import java.io.BufferedReader
-import java.io.InputStreamReader
-
-private const val VOCAB_PATH  = "gpt2-vocab.json"
-private const val MERGES_PATH = "gpt2-merges.txt"
-
-class GPT2Tokenizer(private val context: Context) {
-    private val encoder: Map<String, Int>
-    private val decoder: Map<Int, String>
-    private val bpeRanks: Map<Pair<String, String>, Int>
+class GPT2Tokenizer(
+        private val encoder: Map<String, Int>,
+        private val decoder: Map<Int, String>,
+        private val bpeRanks: Map<Pair<String, String>, Int>) {
     private val encodeRegex = Regex("""'s|'t|'re|'ve|'m|'ll|'d| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+""")
-
-    init {
-        encoder = hashMapOf<String, Int>().apply {
-            val vocabStream = context.assets.open(VOCAB_PATH)
-            vocabStream.use {
-                val vocabReader = JsonReader(InputStreamReader(it, "UTF-8"))
-                vocabReader.beginObject();
-                while (vocabReader.hasNext()) {
-                    val key = vocabReader.nextName()
-                    val value = vocabReader.nextInt()
-                    put(key, value)
-                }
-                vocabReader.close()
-            }
-        }
-
-        decoder = encoder.entries.associateBy({ it.value }, { it.key })
-
-        bpeRanks = hashMapOf<Pair<String, String>, Int>().apply {
-            val mergesStream = context.assets.open(MERGES_PATH)
-            mergesStream.use { stream ->
-                val mergesReader = BufferedReader(InputStreamReader(stream))
-                mergesReader.useLines { seq ->
-                    seq.drop(1).forEachIndexed { i, s ->
-                        val list = s.split(" ")
-                        val keyTuple = list[0] to list[1]
-                        put(keyTuple, i)
-                    }
-                }
-            }
-        }
-    }
 
     fun decode(tokens: List<Int>): String {
         val text = tokens.joinToString("") { decoder.getOrDefault(it, "") }
@@ -52,7 +12,7 @@ class GPT2Tokenizer(private val context: Context) {
         return String(utfCodepoints.toIntArray(), 0, utfCodepoints.size)
     }
 
-    fun encode(text: String): List<Int> {
+    fun encode(text: String): MutableList<Int> {
         val tokens = encodeRegex.findAll(text).map {
             it.value.codePoints()
                     .boxed()
@@ -65,7 +25,7 @@ class GPT2Tokenizer(private val context: Context) {
                 .map { bpe(it) }
                 .flatten()
                 .map { encoder[it]!! }
-                .toList()
+                .toMutableList()
     }
 
     private fun bpe(token: String): List<String> {
