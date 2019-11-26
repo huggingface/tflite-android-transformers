@@ -12,9 +12,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".gpt2.ui.GPT2Activity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
             android:name=".bertqa.ui.QaActivity"
             android:exported="false">
             <meta-data
