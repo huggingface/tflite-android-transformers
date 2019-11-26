@@ -13,8 +13,8 @@ class GPT2Tokenizer(
     }
 
     fun encode(text: String): MutableList<Int> {
-        val tokens = encodeRegex.findAll(text).map {
-            it.value.codePoints()
+        val tokens = encodeRegex.findAll(text).map { result ->
+            result.value.codePoints()
                     .boxed()
                     .map { byteEncoder[it]!! }
                     .toArray()
