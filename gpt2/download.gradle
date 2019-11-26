@@ -1,0 +1,14 @@
+apply plugin: 'de.undercouch.download'
+
+task downloadLiteModel {
+    def downloadFiles = [
+//        'https://s3.amazonaws.com/models.huggingface.co/bert/distilbert-base-uncased-distilled-squad-384.tflite': 'model.tflite',
+    ]
+    downloadFiles.each { key, value ->
+      download {
+          src key
+          dest "$projectDir/src/main/assets/" + value
+          overwrite false
+      }
+    }
+}

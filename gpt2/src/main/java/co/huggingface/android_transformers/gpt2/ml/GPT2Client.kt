@@ -3,7 +3,10 @@ package co.huggingface.android_transformers.gpt2.ml
 import android.app.Application
 import android.util.JsonReader
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import co.huggingface.android_transformers.gpt2.tokenization.GPT2Tokenizer
+import kotlinx.coroutines.Dispatchers
 import org.tensorflow.lite.Interpreter
 import java.io.BufferedReader
 import java.io.FileInputStream
@@ -17,7 +20,7 @@ private const val SEQUENCE_LENGTH  = 64
 private const val VOCAB_SIZE       = 50257
 private const val NUM_HEAD         = 12
 private const val NUM_LITE_THREADS = 4
-private const val MODEL_PATH       = "gpt2-64.tflite"
+private const val MODEL_PATH       = "model.tflite"
 private const val VOCAB_PATH       = "gpt2-vocab.json"
 private const val MERGES_PATH      = "gpt2-merges.txt"
 
@@ -44,12 +47,10 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
         if (!::tflite.isInitialized) {
             tflite = loadModel()
         }
-
-        generate("My name is")
     }
 
-    fun generate(text: String, nbTokens: Int = 10) { // = liveData<String>(
-            //viewModelScope.coroutineContext+Dispatchers.Default) {
+    fun generate(text: String, nbTokens: Int = 10) = liveData<String>(
+            viewModelScope.coroutineContext+Dispatchers.Default) {
 
         val tokens = tokenizer.encode(text)
         repeat (nbTokens) {
@@ -85,8 +86,7 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
 
             tokens.add(nextToken)
             val decodedToken = tokenizer.decode(listOf(nextToken))
-            print(decodedToken)
-//            emit(decodedToken)
+            emit(decodedToken)
         }
     }
 
