@@ -16,6 +16,7 @@ package co.huggingface.android_transformers.bertqa.ui;
 
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import co.huggingface.android_transformers.R;
