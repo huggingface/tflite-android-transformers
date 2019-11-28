@@ -1,12 +1,17 @@
 package co.huggingface.android_transformers.gpt2.ml
 
 import android.app.Application
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.util.JsonReader
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.liveData
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
+import androidx.databinding.BindingAdapter
+import androidx.lifecycle.*
+import co.huggingface.android_transformers.gpt2.R
 import co.huggingface.android_transformers.gpt2.tokenization.GPT2Tokenizer
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import org.tensorflow.lite.Interpreter
 import java.io.BufferedReader
 import java.io.FileInputStream
@@ -23,6 +28,7 @@ private const val NUM_LITE_THREADS = 4
 private const val MODEL_PATH       = "model.tflite"
 private const val VOCAB_PATH       = "gpt2-vocab.json"
 private const val MERGES_PATH      = "gpt2-merges.txt"
+private const val TAG              = "GPT2Client"
 
 private typealias Predictions = Array<Array<FloatArray>>
 
@@ -30,28 +36,58 @@ enum class GPT2StrategyEnum { GREEDY, TOPK }
 data class GPT2Strategy(val strategy: GPT2StrategyEnum, val value: Int = 0)
 
 class GPT2Client(application: Application) : AndroidViewModel(application) {
+    private val initJob: Job
+    private var autocompleteJob: Job? = null
     private lateinit var tokenizer: GPT2Tokenizer
     private lateinit var tflite: Interpreter
 
+    private val prompts = arrayOf(
+        "Before boarding your rocket to Mars, remember to pack these items",
+        "In a shocking finding, scientist discovered a herd of unicorns living in a remote, previously unexplored valley, in the Andes Mountains. Even more surprising to the researchers was the fact that the unicorns spoke perfect English.",
+        "Legolas and Gimli advanced on the orcs, raising their weapons with a harrowing war cry.",
+        "Today, scientists confirmed the worst possible outcome: the massive asteroid will collide with Earth",
+        "Hugging Face is a company that releases awesome projects in machine learning because"
+    )
+
+    private val _prompt = MutableLiveData(prompts[3])
+    val prompt: LiveData<String> = _prompt
+
+    private val _completion = MutableLiveData("")
+    val completion: LiveData<String> = _completion
+
     var strategy = GPT2Strategy(GPT2StrategyEnum.TOPK, 40)
 
-    fun init() {
-        if (!::tokenizer.isInitialized) {
+    init {
+        initJob = viewModelScope.launch {
             val encoder  = loadEncoder()
             val decoder  = encoder.entries.associateBy({ it.value }, { it.key })
             val bpeRanks = loadBpeRanks()
 
             tokenizer = GPT2Tokenizer(encoder, decoder, bpeRanks)
-        }
-
-        if (!::tflite.isInitialized) {
-            tflite = loadModel()
+            tflite    = loadModel()
         }
     }
 
-    fun generate(text: String, nbTokens: Int = 10) = liveData<String>(
-            viewModelScope.coroutineContext+Dispatchers.Default) {
+    override fun onCleared() {
+        super.onCleared()
+        tflite.close()
+    }
 
+    fun launchAutocomplete() {
+        autocompleteJob = viewModelScope.launch {
+            initJob.join()
+            autocompleteJob?.cancelAndJoin()
+            _completion.value = ""
+            generate("My name is")
+        }
+    }
+
+    fun refreshPrompt() {
+        _prompt.value = prompts.random()
+        launchAutocomplete()
+    }
+
+    private suspend fun generate(text: String, nbTokens: Int = 50) = withContext(Dispatchers.Default) {
         val tokens = tokenizer.encode(text)
         repeat (nbTokens) {
             val maxTokens    = tokens.takeLast(SEQUENCE_LENGTH).toIntArray()
@@ -86,13 +122,15 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
 
             tokens.add(nextToken)
             val decodedToken = tokenizer.decode(listOf(nextToken))
-            emit(decodedToken)
+            _completion.postValue(_completion.value + decodedToken)
+
+            yield()
         }
     }
 
-    private fun loadModel(): Interpreter {
+    private suspend fun loadModel(): Interpreter = withContext(Dispatchers.IO) {
         val assetFileDescriptor = getApplication<Application>().assets.openFd(MODEL_PATH)
-        return assetFileDescriptor.use {
+        assetFileDescriptor.use {
             val fileChannel = FileInputStream(assetFileDescriptor.fileDescriptor).channel
             val modelBuffer = fileChannel.map(FileChannel.MapMode.READ_ONLY, it.startOffset, it.declaredLength)
 
@@ -102,8 +140,8 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun loadEncoder(): Map<String, Int> {
-        return hashMapOf<String, Int>().apply {
+    private suspend fun loadEncoder(): Map<String, Int> = withContext(Dispatchers.IO) {
+        hashMapOf<String, Int>().apply {
             val vocabStream = getApplication<Application>().assets.open(VOCAB_PATH)
             vocabStream.use {
                 val vocabReader = JsonReader(InputStreamReader(it, "UTF-8"))
@@ -118,8 +156,8 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun loadBpeRanks(): Map<Pair<String, String>, Int> {
-        return hashMapOf<Pair<String, String>, Int>().apply {
+    private suspend fun loadBpeRanks():Map<Pair<String, String>, Int> = withContext(Dispatchers.IO) {
+        hashMapOf<Pair<String, String>, Int>().apply {
             val mergesStream = getApplication<Application>().assets.open(MERGES_PATH)
             mergesStream.use { stream ->
                 val mergesReader = BufferedReader(InputStreamReader(stream))
@@ -136,7 +174,7 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
 }
 
 private fun randomIndex(probs: List<Float>): Int {
-    val rnd = Random.nextFloat()
+    val rnd = probs.sum() * Random.nextFloat()
     var acc = 0f
 
     probs.forEachIndexed { i, fl ->
@@ -163,4 +201,13 @@ private fun FloatArray.argmax(): Int {
     }
 
     return bestIndex
+}
+
+@BindingAdapter("prompt", "completion")
+fun TextView.formatCompletion(prompt: String, completion: String) {
+    val str = SpannableStringBuilder(prompt + completion)
+    val bgCompletionColor = ResourcesCompat.getColor(resources, R.color.colorPrimary, context.theme)
+    str.setSpan(android.text.style.BackgroundColorSpan(bgCompletionColor), prompt.length, str.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+    text = str
 }

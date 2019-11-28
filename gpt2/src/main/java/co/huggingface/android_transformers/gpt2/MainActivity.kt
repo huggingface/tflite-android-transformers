@@ -2,37 +2,23 @@ package co.huggingface.android_transformers.gpt2
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import androidx.activity.viewModels
-import androidx.lifecycle.observe
+import androidx.databinding.DataBindingUtil
+import co.huggingface.android_transformers.gpt2.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private val gpt2: co.huggingface.android_transformers.gpt2.ml.GPT2Client by viewModels()
-    private val handlerThread by lazy { HandlerThread("GPT2Client") }
-    private val handler by lazy {
-        handlerThread.start()
-        Handler(handlerThread.looper)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        handler.post {
-            gpt2.init()
-            val generation = gpt2.generate("My name is")
+        val binding: ActivityMainBinding
+                = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-            runOnUiThread {
-                generation.observe(this) {
-                    print(it)
-                }
-            }
-        }
-    }
+        // Bind layout with ViewModel
+        binding.vm = gpt2
 
-    override fun onDestroy() {
-        super.onDestroy()
-        handlerThread.quit()
+        // LiveData needs the lifecycle owner
+        binding.lifecycleOwner = this
     }
 }
