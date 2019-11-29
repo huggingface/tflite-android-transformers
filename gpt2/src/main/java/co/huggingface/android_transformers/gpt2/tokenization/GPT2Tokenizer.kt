@@ -35,12 +35,13 @@ class GPT2Tokenizer(
         var pairs = getPairs(word)
 
         while (true) {
+            if (!pairs.any { bpeRanks.containsKey(it) }) break
             val (first, second) = pairs.minBy { bpeRanks.getOrDefault(it, Int.MAX_VALUE) } ?: break
 
             var i = 0
             val newWord = mutableListOf<String>()
             while (i < word.size) {
-                val j = word.subList(i, word.size).indexOf(first)
+                val j = word.withIndex().indexOfFirst { it.index >= i && it.value == first }
                 if (j != -1) {
                     newWord.addAll(word.subList(i, j))
                     i = j

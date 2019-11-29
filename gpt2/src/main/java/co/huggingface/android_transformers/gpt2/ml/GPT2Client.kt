@@ -49,7 +49,7 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
         "Hugging Face is a company that releases awesome projects in machine learning because"
     )
 
-    private val _prompt = MutableLiveData(prompts[3])
+    private val _prompt = MutableLiveData(prompts.random())
     val prompt: LiveData<String> = _prompt
 
     private val _completion = MutableLiveData("")
@@ -78,7 +78,7 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
             initJob.join()
             autocompleteJob?.cancelAndJoin()
             _completion.value = ""
-            generate("My name is")
+            generate(_prompt.value!!)
         }
     }
 
@@ -102,11 +102,10 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
 
             val nextToken: Int = when (strategy.strategy) {
                 GPT2StrategyEnum.TOPK -> {
-                    val finalTopK = min(strategy.value, outputLogits.size)
                     val filteredLogits = outputLogits
                             .mapIndexed { index, fl -> (index to fl) }
-                            .sortedBy   { it.second }
-                            .takeWhile  { it.second < finalTopK }
+                            .sortedByDescending { it.second }
+                            .take(strategy.value)
 
                     // Softmax computation on filtered logits
                     val maxLogitValue = outputLogits.max()!!
@@ -204,10 +203,15 @@ private fun FloatArray.argmax(): Int {
 }
 
 @BindingAdapter("prompt", "completion")
-fun TextView.formatCompletion(prompt: String, completion: String) {
-    val str = SpannableStringBuilder(prompt + completion)
-    val bgCompletionColor = ResourcesCompat.getColor(resources, R.color.colorPrimary, context.theme)
-    str.setSpan(android.text.style.BackgroundColorSpan(bgCompletionColor), prompt.length, str.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+fun TextView.formatCompletion(prompt: String, completion: String): Unit {
+    text = when {
+        completion.isEmpty() -> prompt
+        else -> {
+            val str = SpannableStringBuilder(prompt + completion)
+            val bgCompletionColor = ResourcesCompat.getColor(resources, R.color.colorPrimary, context.theme)
+            str.setSpan(android.text.style.BackgroundColorSpan(bgCompletionColor), prompt.length, str.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-    text = str
+            str
+        }
+    }
 }
