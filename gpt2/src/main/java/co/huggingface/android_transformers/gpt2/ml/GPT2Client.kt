@@ -4,7 +4,6 @@ import android.app.Application
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.util.JsonReader
-import android.util.Log
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
@@ -18,7 +17,6 @@ import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.nio.channels.FileChannel
 import kotlin.math.exp
-import kotlin.math.min
 import kotlin.random.Random
 
 private const val SEQUENCE_LENGTH  = 64
@@ -87,7 +85,7 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
         launchAutocomplete()
     }
 
-    private suspend fun generate(text: String, nbTokens: Int = 50) = withContext(Dispatchers.Default) {
+    private suspend fun generate(text: String, nbTokens: Int = 100) = withContext(Dispatchers.Default) {
         val tokens = tokenizer.encode(text)
         repeat (nbTokens) {
             val maxTokens    = tokens.takeLast(SEQUENCE_LENGTH).toIntArray()
