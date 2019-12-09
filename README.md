@@ -14,6 +14,10 @@ It provides 48 passages from the dataset for users to choose from.
 
 ![demo gif](media/distilbert_qa.gif "Demo running offline on a Samsung Galaxy S8")
 
+> Available models:
+> * "original" converted DistilBERT (266MB)
+> * FP16 post-training-quantized DistilBERT (67MB)
+
 ### Coming soon: GPT-2, quantization... and much more!
 
 ---
@@ -68,6 +72,16 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
 ---
+
+## Change the model
+
+To choose which model to use in the app:
+*   Remove/rename the current `model.tflite` file in `app/src/main/assets`
+*   Comment/uncomment the model to download in the `download.gradle` config file:
+```java
+"https://s3.amazonaws.com/models.huggingface.co/bert/distilbert-base-uncased-distilled-squad-384.tflite": "model.tflite", // <- "original" converted DistilBERT (default)
+// "https://s3.amazonaws.com/models.huggingface.co/bert/distilbert-base-uncased-distilled-squad-384-fp16.tflite": "model.tflite", // <- fp16 quantized version of DistilBERT
+```
 
 ## Models generation
 

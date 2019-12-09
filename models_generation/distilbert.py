@@ -10,7 +10,14 @@ print(model.inputs)
 print(model.outputs)
 
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
+
+# For normal conversion:
 converter.target_spec.supported_ops = [tf.lite.OpsSet.SELECT_TF_OPS]
+
+# For FP16 conversion:
+# converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS, tf.lite.OpsSet.SELECT_TF_OPS]
+# converter.optimizations = [tf.lite.Optimize.OPTIMIZE_FOR_SIZE]
+# converter.experimental_new_converter = True
 
 tflite_model = converter.convert()
 
