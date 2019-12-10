@@ -14,7 +14,13 @@ converter = tf.lite.TFLiteConverter.from_keras_model(model)
 # For normal conversion:
 converter.target_spec.supported_ops = [tf.lite.OpsSet.SELECT_TF_OPS]
 
-# For FP16 conversion:
+# For conversion with FP16 quantization:
+# converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS, tf.lite.OpsSet.SELECT_TF_OPS]
+# converter.target_spec.supported_types = [tf.float16]
+# converter.optimizations = [tf.lite.Optimize.DEFAULT]
+# converter.experimental_new_converter = True
+
+# For conversion with hybrid quantization:
 # converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS, tf.lite.OpsSet.SELECT_TF_OPS]
 # converter.optimizations = [tf.lite.Optimize.OPTIMIZE_FOR_SIZE]
 # converter.experimental_new_converter = True

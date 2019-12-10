@@ -15,8 +15,9 @@ It provides 48 passages from the dataset for users to choose from.
 ![demo gif](media/distilbert_qa.gif "Demo running offline on a Samsung Galaxy S8")
 
 > Available models:
-> * "original" converted DistilBERT (266MB)
-> * FP16 post-training-quantized DistilBERT (67MB)
+> * "original" converted DistilBERT (254MB)
+> * FP16 post-training-quantized DistilBERT (131MB)
+> * "hybrid" (8-bits precision weights) post-training-quantized DistilBERT (64MB)
 
 ### Coming soon: GPT-2, quantization... and much more!
 
@@ -81,6 +82,7 @@ To choose which model to use in the app:
 ```java
 "https://s3.amazonaws.com/models.huggingface.co/bert/distilbert-base-uncased-distilled-squad-384.tflite": "model.tflite", // <- "original" converted DistilBERT (default)
 // "https://s3.amazonaws.com/models.huggingface.co/bert/distilbert-base-uncased-distilled-squad-384-fp16.tflite": "model.tflite", // <- fp16 quantized version of DistilBERT
+// "https://s3.amazonaws.com/models.huggingface.co/bert/distilbert-base-uncased-distilled-squad-384-8bits.tflite": "model.tflite", // <- hybrid quantized version of DistilBERT
 ```
 
 ## Models generation
