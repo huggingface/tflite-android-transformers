@@ -4,7 +4,11 @@ On-device text generation app using [GPT-2](https://d4mucfpksywv.cloudfront.net/
 
 ![demo gif](../media/gpt2_generation.gif "Demo running offline on a Samsung Galaxy S8, accelerated")
 
-> Available models: GPT-2 (small), GPT-2-FP16 (small), DistilGPT2
+> Available models:
+> * "original" converted small GPT-2 (472MB)
+> * FP16 post-training-quantized small GPT-2 (237MB)
+> * 8-bit precision weights post-training-quantized small GPT-2 (119MB)
+> * "original" converted DistilGPT2, a distilled version of GPT-2 (310MB)
 
 ## Build the demo app using Android Studio
 
