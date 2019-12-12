@@ -100,18 +100,19 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
 
             val nextToken: Int = when (strategy.strategy) {
                 GPT2StrategyEnum.TOPK -> {
-                    val filteredLogits = outputLogits
+                    val filteredLogitsWithIndexes = outputLogits
                             .mapIndexed { index, fl -> (index to fl) }
                             .sortedByDescending { it.second }
                             .take(strategy.value)
 
                     // Softmax computation on filtered logits
-                    val maxLogitValue = outputLogits.max()!!
-                    val logitsExp     = filteredLogits.map { exp(it.second - maxLogitValue) }
-                    val sumExp        = logitsExp.sum()
-                    val probs         = logitsExp.map { it.div(sumExp) }
+                    val filteredLogits = filteredLogitsWithIndexes.map { it.second }
+                    val maxLogitValue  = filteredLogits.max()!!
+                    val logitsExp      = filteredLogits.map { exp(it - maxLogitValue) }
+                    val sumExp         = logitsExp.sum()
+                    val probs          = logitsExp.map { it.div(sumExp) }
 
-                    val logitsIndexes = filteredLogits.map { it.first }
+                    val logitsIndexes = filteredLogitsWithIndexes.map { it.first }
                     sample(logitsIndexes, probs)
                 }
                 else -> outputLogits.argmax()
