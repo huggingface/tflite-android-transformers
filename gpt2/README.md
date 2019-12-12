@@ -58,7 +58,8 @@ To choose which model to use in the app:
 *   Remove/rename the current `model.tflite` file in `src/main/assets`
 *   Comment/uncomment the model to download in the `download.gradle` config file:
 ```java
-"https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-fp16-64.tflite": "model.tflite", // <- fp16 quantized version of gpt-2 (small) (default)
-// "https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-64.tflite": "model.tflite", // <- "original" gpt-2 (small)
+"https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-64-fp16.tflite": "model.tflite",     // <- fp16 quantized gpt-2 (small) (default)
+// "https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-64-8bits.tflite": "model.tflite", // <- 8-bit integers quantized gpt-2 (small)
+// "https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-64.tflite": "model.tflite",       // <- "original" gpt-2 (small)
 // "https://s3.amazonaws.com/models.huggingface.co/bert/distilgpt2-64.tflite": "model.tflite", // <- distilled version of gpt-2 (small)
 ```
