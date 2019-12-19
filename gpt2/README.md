@@ -1,6 +1,8 @@
 # Text Generation with GPT2/DistilGPT2
 
-On-device text generation app using [GPT-2](https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf) or [DistilGPT2](https://medium.com/huggingface/distilbert-8cf3380435b5) (same distillation process than DistilBERT, 2x faster and 33% smaller than GPT-2)
+On-device text generation app using [GPT-2](https://d4mucfpksywv.cloudfront.net/better-language-models/language_models_are_unsupervised_multitask_learners.pdf) or [DistilGPT2](https://medium.com/huggingface/distilbert-8cf3380435b5) (same distillation process than DistilBERT, 2x faster and 33% smaller than GPT-2).
+
+Check the associated [On-Device Machine Learning: Text Generation on Android](https://towardsdatascience.com/on-device-machine-learning-text-generation-on-android-6ad940c00911) article for more information on the how-to!
 
 ![demo gif](../media/gpt2_generation.gif "Demo running offline on a Samsung Galaxy S8, accelerated")
 
