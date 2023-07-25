@@ -1,6 +1,6 @@
 apply plugin: 'de.undercouch.download'
 
-task downloadLiteModel {
+task downloadLiteModel(type: Download) {
     def downloadFiles = [
         "https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-vocab.json": "gpt2-vocab.json",
         "https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-merges.txt": "gpt2-merges.txt",

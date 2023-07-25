@@ -1,9 +1,12 @@
 package co.huggingface.android_transformers.gpt2
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.databinding.DataBindingUtil
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import co.huggingface.android_transformers.gpt2.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -11,14 +14,39 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val binding: ActivityMainBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val binding: ActivityMainBinding
-                = DataBindingUtil.setContentView(this, R.layout.activity_main)
-
-        // Bind layout with ViewModel
-        binding.vm = gpt2
-
-        // LiveData needs the lifecycle owner
-        binding.lifecycleOwner = this
+        binding.autocompleteButton.setOnClickListener {
+            gpt2.launchAutocomplete()
+        }
+        binding.shuffleButton.setOnClickListener {
+            gpt2.refreshPrompt()
+        }
+        gpt2.completion.observe(this) { completion ->
+            gpt2.prompt.observe(this) { prompt ->
+                binding.prompt.formatCompletion(prompt, completion)
+            }
+        }
     }
+
+    private fun TextView.formatCompletion(prompt: String, completion: String) {
+        text = when {
+            completion.isEmpty() -> prompt
+            else -> {
+                val str = SpannableStringBuilder(prompt + completion)
+                val bgCompletionColor =
+                    ResourcesCompat.getColor(resources, R.color.colorPrimary, context.theme)
+                str.apply {
+                    setSpan(
+                        android.text.style.BackgroundColorSpan(bgCompletionColor),
+                        prompt.length,
+                        str.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                }
+            }
+        }
+    }
+
 }

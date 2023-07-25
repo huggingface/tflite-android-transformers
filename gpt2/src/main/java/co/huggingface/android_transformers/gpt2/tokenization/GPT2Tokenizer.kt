@@ -36,7 +36,7 @@ class GPT2Tokenizer(
 
         while (true) {
             if (!pairs.any { bpeRanks.containsKey(it) }) break
-            val (first, second) = pairs.minBy { bpeRanks.getOrDefault(it, Int.MAX_VALUE) } ?: break
+            val (first, second) = pairs.minByOrNull { bpeRanks.getOrDefault(it, Int.MAX_VALUE) } ?: break
 
             var i = 0
             val newWord = mutableListOf<String>()
