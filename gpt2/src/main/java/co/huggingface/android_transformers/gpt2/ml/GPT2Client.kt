@@ -1,16 +1,18 @@
 package co.huggingface.android_transformers.gpt2.ml
 
 import android.app.Application
-import android.text.Spannable
-import android.text.SpannableStringBuilder
 import android.util.JsonReader
-import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
-import androidx.databinding.BindingAdapter
-import androidx.lifecycle.*
-import co.huggingface.android_transformers.gpt2.R
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import co.huggingface.android_transformers.gpt2.tokenization.GPT2Tokenizer
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.yield
 import org.tensorflow.lite.Interpreter
 import java.io.BufferedReader
 import java.io.FileInputStream
@@ -107,7 +109,7 @@ class GPT2Client(application: Application) : AndroidViewModel(application) {
 
                     // Softmax computation on filtered logits
                     val filteredLogits = filteredLogitsWithIndexes.map { it.second }
-                    val maxLogitValue  = filteredLogits.max()!!
+                    val maxLogitValue  = filteredLogits.maxOrNull()!!
                     val logitsExp      = filteredLogits.map { exp(it - maxLogitValue) }
                     val sumExp         = logitsExp.sum()
                     val probs          = logitsExp.map { it.div(sumExp) }
@@ -199,18 +201,4 @@ private fun FloatArray.argmax(): Int {
     }
 
     return bestIndex
-}
-
-@BindingAdapter("prompt", "completion")
-fun TextView.formatCompletion(prompt: String, completion: String): Unit {
-    text = when {
-        completion.isEmpty() -> prompt
-        else -> {
-            val str = SpannableStringBuilder(prompt + completion)
-            val bgCompletionColor = ResourcesCompat.getColor(resources, R.color.colorPrimary, context.theme)
-            str.setSpan(android.text.style.BackgroundColorSpan(bgCompletionColor), prompt.length, str.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-            str
-        }
-    }
 }

@@ -19,7 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import co.huggingface.android_transformers.R;
+
+import co.huggingface.android_transformers.bertqa.R;
 import co.huggingface.android_transformers.bertqa.ml.LoadDatasetClient;
 
 /**

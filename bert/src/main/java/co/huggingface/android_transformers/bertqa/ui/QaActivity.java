@@ -39,7 +39,8 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import java.util.List;
 import java.util.Locale;
-import co.huggingface.android_transformers.R;
+
+import co.huggingface.android_transformers.bertqa.R;
 import co.huggingface.android_transformers.bertqa.ml.LoadDatasetClient;
 import co.huggingface.android_transformers.bertqa.ml.QaAnswer;
 import co.huggingface.android_transformers.bertqa.ml.QaClient;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="co.huggingface.android_transformers">
+    package="co.huggingface.android_transformers.bertqa">
 
     <application
         android:allowBackup="true"
@@ -12,14 +12,14 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".bertqa.ui.QaActivity"
+            android:name=".ui.QaActivity"
             android:exported="false">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="co.huggingface.android_transformers.bertqa.ui.DatasetListActivity" />
         </activity>
         <activity
-            android:name=".bertqa.ui.DatasetListActivity"
+            android:name=".ui.DatasetListActivity"
             android:exported="true"
             android:theme="@style/AppTheme.NoTitleActivity">
             <intent-filter>
